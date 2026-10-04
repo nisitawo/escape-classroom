@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESCAPE THE CLASSROOM: The Mystery of the Lost Key</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Cinzel -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'],
+                    },
+                    colors: {
+                        mystery: {
+                            900: '#090d16',
+                            800: '#111827',
+                            700: '#1f2937',
+                            600: '#374151',
+                            gold: '#d97706',
+                            goldLight: '#f59e0b',
+                            goldDark: '#b45309',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f3f4f6;
+            user-select: none;
+        }
+        .cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
+        }
+        .glow-interactive {
+            animation: pulse-glow 2.5s infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between overflow-x-hidden bg-mystery-900">
+
+    <!-- HEADER / HUD BAR -->
+    <header class="bg-mystery-800 border-b border-mystery-600/50 px-4 py-3 shadow-lg z-20 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg bg-mystery-gold/20 border border-mystery-gold flex items-center justify-center text-mystery-goldLight cinzel font-bold text-xl shadow-inner">
+                🔑
+            </div>
+            <div>
+                <h1 class="cinzel text-lg md:text-xl font-bold tracking-wider text-mystery-goldLight">ESCAPE THE CLASSROOM</h1>
+                <p class="text-xs text-gray-400">Grade 10 English Mystery • CEFR A2-B1</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-6 text-sm">
+            <!-- Timer -->
+            <div id="timer-box" class="flex items-center space-x-2 bg-mystery-900/80 px-3 py-1.5 rounded-lg border border-red-500/40 text-red-400 font-mono text-base font-semibold">
+                <span>⏱️</span>
+                <span id="time-display">15:00</span>
+            </div>
+            <!-- Score -->
+            <div class="flex items-center space-x-2 bg-mystery-900/80 px-3 py-1.5 rounded-lg border border-mystery-gold/40 text-mystery-gold font-semibold">
+                <span>⭐</span>
+                <span>Score: <span id="score-display">0</span></span>
+            </div>
+            <!-- Hints -->
+            <button onclick="useHint()" id="hint-btn" class="flex items-center space-x-1.5 bg-mystery-700 hover:bg-mystery-600 px-3 py-1.5 rounded-lg border border-gray-600 transition text-gray-200">
+                <span>💡</span>
+                <span>Hints (<span id="hints-left">3</span>)</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-1 relative flex flex-col items-center justify-center p-4 md:p-6 overflow-y-auto custom-scrollbar">
+
+        <!-- VIEW 1: WELCOME SCREEN -->
+        <div id="view-welcome" class="w-full max-w-3xl bg-mystery-800/90 border border-mystery-600 rounded-2xl p-6 md:p-10 shadow-2xl text-center space-y-6 backdrop-blur-md">
+            <div class="w-24 h-24 mx-auto rounded-2xl bg-gradient-to-br from-amber-500/20 to-mystery-goldDark/40 border-2 border-mystery-gold flex items-center justify-center text-5xl floating glow-interactive">
+                🏫
+            </div>
+            <div class="space-y-2">
+                <h2 class="cinzel text-2xl md:text-4xl font-extrabold text-white tracking-wide">The Mystery of the Lost Key</h2>
+                <p class="text-gray-300 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                    You are locked inside Room 404 after school hours. The door is deadbolted with an electronic lock. To escape, you must master 5 challenges covering advanced vocabulary, complex grammar, investigative reading, and secret codes.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left max-w-2xl mx-auto pt-2">
+                <div class="bg-mystery-900/60 p-4 rounded-xl border border-gray-700 flex items-start space-x-3">
+                    <span class="text-2xl">🧠</span>
+                    <div>
+                        <h4 class="font-semibold text-white text-sm">5 Interactive Stages</h4>
+                        <p class="text-xs text-gray-400">Vocabulary, Grammar, Reading, Code & Final Escape.</p>
+                    </div>
+                </div>
+                <div class="bg-mystery-900/60 p-4 rounded-xl border border-gray-700 flex items-start space-x-3">
+                    <span class="text-2xl">⏳</span>
+                    <div>
+                        <h4 class="font-semibold text-white text-sm">15-Min Countdown</h4>
+                        <p class="text-xs text-gray-400">Think fast, solve puzzles, and manage your time wisely.</p>
+                    </div>
+                </div>
+                <div class="bg-mystery-900/60 p-4 rounded-xl border border-gray-700 flex items-start space-x-3">
+                    <span class="text-2xl">🎒</span>
+                    <div>
+                        <h4 class="font-semibold text-white text-sm">Inventory & Hints</h4>
+                        <p class="text-xs text-gray-400">Collect clues and use up to 3 hints when stuck.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button onclick="startGame()" class="cinzel bg-gradient-to-r from-amber-600 to-mystery-gold hover:from-amber-500 hover:to-amber-400 text-gray-950 font-extxl font-bold px-8 py-4 rounded-xl shadow-lg transform hover:scale-105 transition duration-200 text-lg">
+                    ENTER THE CLASSROOM ➔
+                </button>
+            </div>
+        </div>
+
+        <!-- VIEW 2: CLASSROOM HUB (STAGE SELECTOR / INTERACTIVE ROOM) -->
+        <div id="view-hub" class="w-full max-w-5xl hidden flex-col space-y-6">
+            <!-- Room Header / Status -->
+            <div class="bg-mystery-800/80 border border-mystery-600 p-4 rounded-xl flex flex-col md:flex-row justify-between items-center gap-4 backdrop-blur-sm">
+                <div>
+                    <h3 class="cinzel text-xl font-bold text-mystery-goldLight">Room 404: Main Investigation Hub</h3>
+                    <p class="text-xs text-gray-300">Select an active stage or examine mysterious objects around the room to unlock your freedom.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div id="inventory-badge" class="bg-mystery-900 px-3 py-1.5 rounded-lg border border-gray-700 text-xs text-gray-300 flex items-center space-x-2">
+                        <span>🎒 Inventory:</span>
+                        <span id="inventory-items" class="font-semibold text-mystery-gold">Empty</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Virtual Classroom Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Stage 1 Card -->
+                <div id="stage-card-1" onclick="selectStage(1)" class="bg-mystery-800 border-2 border-mystery-gold rounded-xl p-5 flex flex-col justify-between cursor-pointer hover:border-amber-400 hover:shadow-xl transition relative group">
+                    <div class="absolute top-3 right-3 text-xs bg-amber-500/20 text-mystery-gold px-2 py-0.5 rounded font-bold">Stage 1</div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl group-hover:scale-110 transition">📚</div>
+                        <h4 class="cinzel font-bold text-white text-base">Vocabulary Challenge</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Inspect the Teacher's Desk for school & environment word puzzles.</p>
+                    </div>
+                    <div class="pt-4 flex items-center justify-between text-xs font-semibold">
+                        <span id="status-1" class="text-amber-400">⚡ Available</span>
+                        <span class="text-mystery-gold group-hover:translate-x-1 transition">Enter ➔</span>
+                    </div>
+                </div>
+
+                <!-- Stage 2 Card -->
+                <div id="stage-card-2" onclick="selectStage(2)" class="bg-mystery-800/60 border border-gray-700 rounded-xl p-5 flex flex-col justify-between cursor-pointer hover:border-gray-500 transition relative group opacity-60 pointer-events-none" data-locked="true">
+                    <div class="absolute top-3 right-3 text-xs bg-gray-700 text-gray-400 px-2 py-0.5 rounded font-bold">Stage 2</div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center text-2xl group-hover:scale-110 transition">⚙️</div>
+                        <h4 class="cinzel font-bold text-white text-base">Grammar Mystery</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Examine the Blackboard for tense and condition puzzles.</p>
+                    </div>
+                    <div class="pt-4 flex items-center justify-between text-xs font-semibold">
+                        <span id="status-2" class="text-gray-500">🔒 Locked</span>
+                        <span class="text-gray-500">Enter ➔</span>
+                    </div>
+                </div>
+
+                <!-- Stage 3 Card -->
+                <div id="stage-card-3" onclick="selectStage(3)" class="bg-mystery-800/60 border border-gray-700 rounded-xl p-5 flex flex-col justify-between cursor-pointer hover:border-gray-500 transition relative group opacity-60 pointer-events-none" data-locked="true">
+                    <div class="absolute top-3 right-3 text-xs bg-gray-700 text-gray-400 px-2 py-0.5 rounded font-bold">Stage 3</div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center text-2xl group-hover:scale-110 transition">📜</div>
+                        <h4 class="cinzel font-bold text-white text-base">Reading Detective</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Read the bookshelf diary to solve comprehension clues.</p>
+                    </div>
+                    <div class="pt-4 flex items-center justify-between text-xs font-semibold">
+                        <span id="status-3" class="text-gray-500">🔒 Locked</span>
+                        <span class="text-gray-500">Enter ➔</span>
+                    </div>
+                </div>
+
+                <!-- Stage 4 Card -->
+                <div id="stage-card-4" onclick="selectStage(4)" class="bg-mystery-800/60 border border-gray-700 rounded-xl p-5 flex flex-col justify-between cursor-pointer hover:border-gray-500 transition relative group opacity-60 pointer-events-none" data-locked="true">
+                    <div class="absolute top-3 right-3 text-xs bg-gray-700 text-gray-400 px-2 py-0.5 rounded font-bold">Stage 4</div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center text-2xl group-hover:scale-110 transition">🔐</div>
+                        <h4 class="cinzel font-bold text-white text-base">The Secret Code</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Decode the locker riddle and unscramble sentences.</p>
+                    </div>
+                    <div class="pt-4 flex items-center justify-between text-xs font-semibold">
+                        <span id="status-4" class="text-gray-500">🔒 Locked</span>
+                        <span class="text-gray-500">Enter ➔</span>
+                    </div>
+                </div>
+
+                <!-- Stage 5 Card -->
+                <div id="stage-card-5" onclick="selectStage(5)" class="bg-mystery-800/60 border border-gray-700 rounded-xl p-5 flex flex-col justify-between cursor-pointer hover:border-gray-500 transition relative group opacity-60 pointer-events-none" data-locked="true">
+                    <div class="absolute top-3 right-3 text-xs bg-gray-700 text-gray-400 px-2 py-0.5 rounded font-bold">Stage 5</div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center text-2xl group-hover:scale-110 transition">🚪</div>
+                        <h4 class="cinzel font-bold text-white text-base">Final Escape</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Combine all skills to override the main door security lock.</p>
+                    </div>
+                    <div class="pt-4 flex items-center justify-between text-xs font-semibold">
+                        <span id="status-5" class="text-gray-500">🔒 Locked</span>
+                        <span class="text-gray-500">Enter ➔</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classroom Interactive Objects Bar -->
+            <div class="bg-mystery-800/90 border border-mystery-600 p-5 rounded-xl space-y-3">
+                <h4 class="cinzel text-sm font-bold text-mystery-goldLight tracking-wide">🔍 Interactive Room Objects</h4>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button onclick="inspectObject('desk')" class="bg-mystery-900/80 hover:bg-mystery-700 p-3 rounded-lg border border-gray-700 text-left transition flex items-center space-x-3">
+                        <span class="text-xl">🗄️</span>
+                        <div>
+                            <div class="font-semibold text-sm text-white">Teacher's Desk</div>
+                            <div class="text-xs text-gray-400">Check for notes</div>
+                        </div>
+                    </button>
+                    <button onclick="inspectObject('blackboard')" class="bg-mystery-900/80 hover:bg-mystery-700 p-3 rounded-lg border border-gray-700 text-left transition flex items-center space-x-3">
+                        <span class="text-xl">📋</span>
+                        <div>
+                            <div class="font-semibold text-sm text-white">Blackboard</div>
+                            <div class="text-xs text-gray-400">Inspect grammar formulas</div>
+                        </div>
+                    </button>
+                    <button onclick="inspectObject('bookshelf')" class="bg-mystery-900/80 hover:bg-mystery-700 p-3 rounded-lg border border-gray-700 text-left transition flex items-center space-x-3">
+                        <span class="text-xl">📚</span>
+                        <div>
+                            <div class="font-semibold text-sm text-white">Bookshelf</div>
+                            <div class="text-xs text-gray-400">Read mystery books</div>
+                        </div>
+                    </button>
+                    <button onclick="inspectObject('door')" class="bg-mystery-900/80 hover:bg-mystery-700 p-3 rounded-lg border border-gray-700 text-left transition flex items-center space-x-3">
+                        <span class="text-xl">🚪</span>
+                        <div>
+                            <div class="font-semibold text-sm text-white">Exit Door</div>
+                            <div class="text-xs text-gray-400">Check security keypad</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: STAGE QUIZ ARENA -->
+        <div id="view-game" class="w-full max-w-3xl hidden bg-mystery-800/95 border border-mystery-600 rounded-2xl p-6 md:p-8 shadow-2xl space-y-6 backdrop-blur-md">
+            <!-- Stage Header -->
+            <div class="flex justify-between items-center border-b border-gray-700 pb-4">
+                <div>
+                    <span id="stage-badge" class="text-xs bg-amber-500/20 text-mystery-gold px-2.5 py-1 rounded-md font-bold uppercase tracking-wider">Stage 1</span>
+                    <h3 id="stage-title" class="cinzel text-xl md:text-2xl font-bold text-white mt-1">Vocabulary Challenge</h3>
+                </div>
+                <button onclick="returnToHub()" class="text-xs bg-mystery-700 hover:bg-mystery-600 px-3 py-1.5 rounded-lg border border-gray-600 transition text-gray-300">
+                    ← Back to Room
+                </button>
+            </div>
+
+            <!-- Question Progress -->
+            <div class="flex justify-between items-center text-xs text-gray-400">
+                <span>Question <span id="current-q-num">1</span> of <span id="total-q-num">3</span></span>
+                <span id="q-topic" class="text-mystery-goldLight font-medium">Topic: School & Environment</span>
+            </div>
+
+            <!-- Question Box -->
+            <div class="space-y-4">
+                <div id="question-text" class="text-base md:text-lg font-medium text-white leading-relaxed bg-mystery-900/60 p-4 rounded-xl border border-gray-700">
+                    Loading question...
+                </div>
+
+                <!-- Options Container -->
+                <div id="options-container" class="grid grid-cols-1 gap-3">
+                    <!-- Dynamic Options -->
+                </div>
+            </div>
+
+            <!-- Explanation Box (Hidden initially) -->
+            <div id="explanation-box" class="hidden bg-mystery-900/90 border border-gray-600 p-4 rounded-xl space-y-2">
+                <div class="flex items-center space-x-2 font-semibold text-sm" id="feedback-header">
+                    <span id="feedback-icon">✅</span>
+                    <span id="feedback-title" class="text-green-400">Correct!</span>
+                </div>
+                <p id="explanation-text" class="text-xs md:text-sm text-gray-300 leading-relaxed">
+                    Explanation goes here...
+                </p>
+                <div class="pt-2 text-right">
+                    <button onclick="nextQuestion()" class="cinzel bg-mystery-gold hover:bg-amber-400 text-gray-950 px-5 py-2 rounded-lg font-bold text-xs md:text-sm transition">
+                        Next Question ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4: VICTORY SCREEN -->
+        <div id="view-victory" class="w-full max-w-2xl hidden bg-mystery-800/95 border-2 border-mystery-gold rounded-2xl p-8 shadow-2xl text-center space-y-6 backdrop-blur-md">
+            <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-500/20 to-mystery-gold/50 border-2 border-mystery-gold flex items-center justify-center text-5xl floating glow-interactive">
+                🏆
+            </div>
+            <div class="space-y-2">
+                <h2 class="cinzel text-3xl font-extrabold text-white tracking-wide">CONGRATULATIONS!</h2>
+                <p class="text-mystery-goldLight font-medium">You successfully escaped Room 404!</p>
+            </div>
+
+            <div class="bg-mystery-900/80 p-6 rounded-xl border border-gray-700 grid grid-cols-2 gap-4 text-center">
+                <div>
+                    <div class="text-xs text-gray-400 uppercase tracking-wider">Final Score</div>
+                    <div id="final-score" class="cinzel text-3xl font-extrabold text-mystery-gold mt-1">0 pts</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-400 uppercase tracking-wider">Time Remaining</div>
+                    <div id="final-time" class="cinzel text-3xl font-extrabold text-cyan-400 mt-1">00:00</div>
+                </div>
+            </div>
+
+            <p class="text-sm text-gray-300 leading-relaxed">
+                Your mastery of Grade 10 English vocabulary, grammar tenses, reading comprehension, and secret codes proved exceptional. You unlocked the electronic deadbolt just in time!
+            </p>
+
+            <div class="pt-4">
+                <button onclick="resetGame()" class="cinzel bg-gradient-to-r from-amber-600 to-mystery-gold hover:from-amber-500 hover:to-amber-400 text-gray-950 font-bold px-8 py-3 rounded-xl shadow-lg transition duration-200">
+                    PLAY AGAIN 🔄
+                </button>
+            </div>
+        </div>
+
+        <!-- VIEW 5: GAME OVER SCREEN -->
+        <div id="view-gameover" class="w-full max-w-xl hidden bg-mystery-800/95 border-2 border-red-500/50 rounded-2xl p-8 shadow-2xl text-center space-y-6 backdrop-blur-md">
+            <div class="w-20 h-20 mx-auto rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center text-4xl">
+                ⏳
+            </div>
+            <div class="space-y-2">
+                <h2 class="cinzel text-2xl md:text-3xl font-extrabold text-red-400 tracking-wide">TIME'S UP!</h2>
+                <p class="text-gray-300 text-sm">The security doors have locked permanently for the night.</p>
+            </div>
+            <p class="text-xs text-gray-400">
+                Don't worry, mystery investigations require practice. Try again to beat the clock!
+            </p>
+            <div class="pt-4">
+                <button onclick="resetGame()" class="cinzel bg-red-600 hover:bg-red-500 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition duration-200">
+                    TRY AGAIN 🔄
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- CUSTOM MODAL / MESSAGE BOX -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-mystery-800 border border-mystery-600 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                <h3 id="modal-title" class="cinzel font-bold text-lg text-mystery-goldLight">Investigation Note</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white font-bold">✕</button>
+            </div>
+            <div id="modal-body" class="text-sm text-gray-300 leading-relaxed">
+                Modal content here...
+            </div>
+            <div class="text-right pt-2">
+                <button onclick="closeModal()" class="bg-mystery-700 hover:bg-mystery-600 text-white px-4 py-2 rounded-lg text-xs font-semibold">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GAME STATE
+        let gameState = {
+            score: 0,
+            timeLeft: 900, // 15 minutes in seconds
+            timerInterval: null,
+            hintsLeft: 3,
+            currentStage: 1,
+            currentQuestionIdx: 0,
+            unlockedStages: [1],
+            inventory: [],
+            stageCompleted: [false, false, false, false, false]
+        };
+
+        // STAGE QUESTIONS DATA (Grade 10 CEFR A2-B1 English)
+        const gameStages = {
+            1: {
+                title: "Stage 1: Vocabulary Challenge",
+                badge: "Stage 1",
+                topic: "School, Daily Life & Environment",
+                questions: [
+                    {
+                        question: "Choose the correct vocabulary word: 'A school policy or rule that requires students to wear the same outfit every day.'",
+                        options: [
+                            "A) Curriculum",
+                            "B) Uniform",
+                            "C) Syllabus",
+                            "D) Timetable"
+                        ],
+                        answer: 1,
+                        explanation: "A 'uniform' refers to the standard clothing worn by members of the same organization, such as students in a school."
+                    },
+                    {
+                        question: "What term describes the natural home or environment of an animal, plant, or other organism?",
+                        options: [
+                            "A) Ecosystem",
+                            "B) Atmosphere",
+                            "C) Habitat",
+                            "D) Biosphere"
+                        ],
+                        answer: 2,
+                        explanation: "A 'habitat' is the natural environment in which a particular species organism lives and thrives."
+                    },
+                    {
+                        question: "Complete the sentence with the right daily life verb: 'Students should always ______ their notes after class to improve memory retention.'",
+                        options: [
+                            "A) Revise",
+                            "B) Ignore",
+                            "C) Abandon",
+                            "D) Predict"
+                        ],
+                        answer: 0,
+                        explanation: "'Revise' means to reread previous coursework or notes in preparation for an examination."
+                    }
+                ]
+            },
+            2: {
+                title: "Stage 2: Grammar Mystery",
+                badge: "Stage 2",
+                topic: "Tenses & Conditionals",
+                questions: [
+                    {
+                        question: "Choose the correct Present Perfect form: 'By the time the bell rang, Sarah ______ her homework.'",
+                        options: [
+                            "A) has already finished",
+                            "B) had already finished",
+                            "C) finishes",
+                            "D) was finishing"
+                        ],
+                        answer: 1,
+                        explanation: "When describing an action completed before another action in the past, we use the Past Perfect tense ('had finished')."
+                    },
+                    {
+                        question: "Select the correct Second Conditional structure: 'If I ______ the answer to the puzzle, I would tell you immediately.'",
+                        options: [
+                            "A) know",
+                            "B) knew",
+                            "C) had known",
+                            "D) would know"
+                        ],
+                        answer: 1,
+                        explanation: "Second Conditional uses 'If + Past Simple' (knew) in the conditional clause and 'would + verb' in the main clause."
+                    },
+                    {
+                        question: "Identify the correct Passive Voice sentence: 'The teacher explained the grammar rule.'",
+                        options: [
+                            "A) The grammar rule is explaining by the teacher.",
+                            "B) The grammar rule was explained by the teacher.",
+                            "C) The grammar rule has explained by the teacher.",
+                            "D) The teacher was explained by the grammar rule."
+                        ],
+                        answer: 1,
+                        explanation: "In Past Simple passive voice, we use 'was/were + past participle' ('was explained')."
+                    }
+                ]
+            },
+            3: {
+                title: "Stage 3: Reading Detective",
+                badge: "Stage 3",
+                topic: "Mystery Passage Comprehension",
+                questions: [
+                    {
+                        question: "Passage: 'Professor Black left his office in a rush at 4:00 PM. He forgot his leather briefcase on the wooden desk, which contained the master security code for Room 404.' Question: What did Professor Black leave behind?",
+                        options: [
+                            "A) His car keys",
+                            "B) His leather briefcase",
+                            "C) A history textbook",
+                            "D) His glasses"
+                        ],
+                        answer: 1,
+                        explanation: "The passage explicitly states he forgot his 'leather briefcase on the wooden desk'."
+                    },
+                    {
+                        question: "Passage (continued): 'The briefcase was locked with a 3-digit combination corresponding to the year the school was founded: 1985.' Question: According to the passage, what year was the school founded?",
+                        options: [
+                            "A) 1975",
+                            "B) 1985",
+                            "C) 1995",
+                            "D) 2005"
+                        ],
+                        answer: 1,
+                        explanation: "The passage mentions the combination corresponds to '1985'."
+                    },
+                    {
+                        question: "Passage (continued): 'Only the head librarian knew that the key to the main electronic door was hidden inside the old dictionary on shelf B.' Question: Where was the key hidden?",
+                        options: [
+                            "A) Inside the old dictionary on shelf B",
+                            "B) Underneath the teacher's chair",
+                            "C) Behind the blackboard",
+                            "D) Inside the science lab"
+                        ],
+                        answer: 0,
+                        explanation: "The text states the key was hidden 'inside the old dictionary on shelf B'."
+                    }
+                ]
+            },
+            4: {
+                title: "Stage 4: The Secret Code",
+                badge: "Stage 4",
+                topic: "Riddles & Word Rearrangement",
+                questions: [
+                    {
+                        question: "Unscramble the following words to form a correct English sentence: [ 'is / mystery / the / key / unlocking / the' ]",
+                        options: [
+                            "A) Unlocking the mystery is the key.",
+                            "B) The key is unlocking the mystery.",
+                            "C) Mystery the is key unlocking the.",
+                            "D) Is the key unlocking the mystery."
+                        ],
+                        answer: 1,
+                        explanation: "Subject + verb + object structure gives: 'The key is unlocking the mystery.'"
+                    },
+                    {
+                        question: "Riddle: 'I have keys but no locks. I have space but no room. You can enter, but you cannot go outside easily. What am I?'",
+                        options: [
+                            "A) A piano",
+                            "B) A computer keyboard",
+                            "C) A classroom door",
+                            "D) A smartphone"
+                        ],
+                        answer: 1,
+                        explanation: "A computer keyboard has 'keys', a 'spacebar', and an 'Enter' key!"
+                    },
+                    {
+                        question: "Find the synonym for 'ANCIENT' that fits a mysterious classroom clue:",
+                        options: [
+                            "A) Modern",
+                            "B) Antique",
+                            "C) Futuristic",
+                            "D) Temporary"
+                        ],
+                        answer: 1,
+                        explanation: "'Antique' is a strong synonym for ancient or very old objects."
+                    }
+                ]
+            },
+            5: {
+                title: "Stage 5: Final Escape",
+                badge: "Stage 5",
+                topic: "Comprehensive Challenge",
+                questions: [
+                    {
+                        question: "Final Override: Choose the sentence with NO grammatical errors.",
+                        options: [
+                            "A) If I studied harder, I will pass the escape test.",
+                            "B) If I had studied harder, I would have passed the escape test.",
+                            "C) If I study harder, I passed the escape test.",
+                            "D) If I would study, I passed."
+                        ],
+                        answer: 1,
+                        explanation: "Third Conditional correctly uses 'If + past perfect' and 'would have + past participle'."
+                    },
+                    {
+                        question: "Final Override: Which word means 'the action of saving something or someone from harm or a difficult situation'?",
+                        options: [
+                            "A) Destruction",
+                            "B) Rescue",
+                            "C) Pollution",
+                            "D) Confusion"
+                        ],
+                        answer: 1,
+                        explanation: "'Rescue' means to save from danger or confinement."
+                    },
+                    {
+                        question: "Final Override: Enter the final passcode confirmation by selecting the correct preposition: 'We finally succeeded ______ escaping the classroom.'",
+                        options: [
+                            "A) on",
+                            "B) at",
+                            "C) in",
+                            "D) with"
+                        ],
+                        answer: 2,
+                        explanation: "The verb 'succeed' is always followed by the preposition 'in' (+ gerund)."
+                    }
+                ]
+            }
+        };
+
+        // START GAME
+        function startGame() {
+            document.getElementById('view-welcome').classList.add('hidden');
+            document.getElementById('view-hub').classList.remove('hidden');
+            startTimer();
+        }
+
+        // TIMER
+        function startTimer() {
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            gameState.timerInterval = setInterval(() => {
+                gameState.timeLeft--;
+                updateTimerDisplay();
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timerInterval);
+                    triggerGameOver();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            document.getElementById('time-display').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // SELECT STAGE
+        function selectStage(stageNum) {
+            if (!gameState.unlockedStages.includes(stageNum)) return;
+            gameState.currentStage = stageNum;
+            gameState.currentQuestionIdx = 0;
+
+            // Switch views
+            document.getElementById('view-hub').classList.add('hidden');
+            document.getElementById('view-game').classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        // RETURN TO HUB
+        function returnToHub() {
+            document.getElementById('view-game').classList.add('hidden');
+            document.getElementById('view-hub').classList.remove('hidden');
+            updateHubUI();
+        }
+
+        // LOAD QUESTION
+        function loadQuestion() {
+            const stageData = gameStages[gameState.currentStage];
+            const q = stageData.questions[gameState.currentQuestionIdx];
+
+            document.getElementById('stage-badge').textContent = stageData.badge;
+            document.getElementById('stage-title').textContent = stageData.title;
+            document.getElementById('current-q-num').textContent = gameState.currentQuestionIdx + 1;
+            document.getElementById('total-q-num').textContent = stageData.questions.length;
+            document.getElementById('q-topic').textContent = `Topic: ${stageData.topic}`;
+            document.getElementById('question-text').textContent = q.question;
+
+            // Hide explanation box
+            document.getElementById('explanation-box').classList.add('hidden');
+
+            // Render options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left bg-mystery-900/80 hover:bg-mystery-700 border border-gray-700 hover:border-mystery-gold p-4 rounded-xl transition font-medium text-sm text-gray-200 flex items-center justify-between group';
+                btn.innerHTML = `<span>${opt}</span> <span class="text-xs text-gray-500 group-hover:text-mystery-gold">Select ➔</span>`;
+                btn.onclick = () => selectAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // SELECT ANSWER
+        function selectAnswer(selectedIdx) {
+            const stageData = gameStages[gameState.currentStage];
+            const q = stageData.questions[gameState.currentQuestionIdx];
+            const isCorrect = (selectedIdx === q.answer);
+
+            // Disable all option buttons
+            const buttons = document.getElementById('options-container').querySelectorAll('button');
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.answer) {
+                    btn.classList.add('bg-green-900/40', 'border-green-500', 'text-green-200');
+                } else if (idx === selectedIdx && !isCorrect) {
+                    btn.classList.add('bg-red-900/40', 'border-red-500', 'text-red-200');
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            // Show feedback
+            const explanationBox = document.getElementById('explanation-box');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const explanationText = document.getElementById('explanation-text');
+
+            if (isCorrect) {
+                feedbackIcon.textContent = '✅';
+                feedbackTitle.textContent = 'Correct Answer!';
+                feedbackTitle.className = 'text-green-400 font-bold';
+                gameState.score += 100;
+                document.getElementById('score-display').textContent = gameState.score;
+            } else {
+                feedbackIcon.textContent = '❌';
+                feedbackTitle.textContent = 'Incorrect Answer';
+                feedbackTitle.className = 'text-red-400 font-bold';
+            }
+
+            explanationText.textContent = q.explanation;
+            explanationBox.classList.remove('hidden');
+        }
+
+        // NEXT QUESTION OR STAGE COMPLETE
+        function nextQuestion() {
+            const stageData = gameStages[gameState.currentStage];
+            gameState.currentQuestionIdx++;
+
+            if (gameState.currentQuestionIdx < stageData.questions.length) {
+                loadQuestion();
+            } else {
+                // Stage Completed!
+                gameState.stageCompleted[gameState.currentStage - 1] = true;
+                
+                // Unlock next stage if available
+                const nextStage = gameState.currentStage + 1;
+                if (nextStage <= 5 && !gameState.unlockedStages.includes(nextStage)) {
+                    gameState.unlockedStages.push(nextStage);
+                }
+
+                // Add inventory reward
+                if (gameState.currentStage === 1) addToInventory("Teacher's Keyring");
+                if (gameState.currentStage === 2) addToInventory("Grammar Cipher");
+                if (gameState.currentStage === 3) addToInventory("Professor's Diary");
+                if (gameState.currentStage === 4) addToInventory("Master Password");
+
+                if (gameState.currentStage === 5) {
+                    triggerVictory();
+                } else {
+                    returnToHub();
+                }
+            }
+        }
+
+        // UPDATE HUB UI
+        function updateHubUI() {
+            for (let i = 1; i <= 5; i++) {
+                const card = document.getElementById(`stage-card-${i}`);
+                const status = document.getElementById(`status-${i}`);
+
+                if (gameState.unlockedStages.includes(i)) {
+                    card.classList.remove('opacity-60', 'pointer-events-none');
+                    if (gameState.stageCompleted[i-1]) {
+                        card.classList.add('border-green-500', 'bg-mystery-800');
+                        status.textContent = '⭐ Completed';
+                        status.className = 'text-green-400';
+                    } else {
+                        card.classList.add('border-mystery-gold', 'bg-mystery-800');
+                        status.textContent = '⚡ Available';
+                        status.className = 'text-amber-400';
+                    }
+                } else {
+                    card.classList.add('opacity-60', 'pointer-events-none');
+                    card.classList.remove('border-mystery-gold', 'border-green-500');
+                    status.textContent = '🔒 Locked';
+                    status.className = 'text-gray-500';
+                }
+            }
+        }
+
+        // INVENTORY
+        function addToInventory(item) {
+            if (!gameState.inventory.includes(item)) {
+                gameState.inventory.push(item);
+                document.getElementById('inventory-items').textContent = gameState.inventory.join(', ');
+            }
+        }
+
+        // INSPECT ROOM OBJECTS
+        function inspectObject(objType) {
+            let title = "";
+            let content = "";
+
+            switch(objType) {
+                case 'desk':
+                    title = "Teacher's Desk";
+                    content = "You search the mahogany drawers. You find a crumpled worksheet about school vocabulary and a sticky note reading: 'Remember to complete Stage 1 to unlock the blackboard formulas!'";
+                    break;
+                case 'blackboard':
+                    title = "The Blackboard";
+                    content = "Chalk formulas cover the board: Present Perfect ('have/has + V3') and Second Conditional ('If + past, would + V1'). You need these rules for Stage 2!";
+                    break;
+                case 'bookshelf':
+                    title = "The Classroom Bookshelf";
+                    content = "Rows of old encyclopedias and novels. You spot an open diary belonging to Professor Black detailing the mystery of Room 404. Complete Stage 3 to read full excerpts.";
+                    break;
+                case 'door':
+                    title = "Exit Door Security Keypad";
+                    content = "A heavy electronic deadbolt with a digital keypad. It requires completing all 5 English stages and acquiring the final passcode to unlock.";
+                    break;
+            }
+
+            showModal(title, content);
+        }
+
+        // MODAL HELPERS
+        function showModal(title, content) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = content;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        // HINTS SYSTEM
+        function useHint() {
+            if (gameState.hintsLeft <= 0) {
+                showModal("No Hints Left", "You have already used all 3 hints for this escape room session!");
+                return;
+            }
+
+            gameState.hintsLeft--;
+            document.getElementById('hints-left').textContent = gameState.hintsLeft;
+
+            const stageData = gameStages[gameState.currentStage];
+            const q = stageData.questions[gameState.currentQuestionIdx];
+            
+            // Give a helpful hint based on correct answer
+            showModal("Detective Hint 💡", `Look closely at the options. For this question, the correct answer is option letter corresponding to number ${q.answer + 1}. Review your English rules carefully!`);
+        }
+
+        // VICTORY / GAME OVER
+        function triggerVictory() {
+            clearInterval(gameState.timerInterval);
+            document.getElementById('view-game').classList.add('hidden');
+            document.getElementById('view-victory').classList.remove('hidden');
+            
+            document.getElementById('final-score').textContent = `${gameState.score} pts`;
+            
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            document.getElementById('final-time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function triggerGameOver() {
+            document.getElementById('view-hub').classList.add('hidden');
+            document.getElementById('view-game').classList.add('hidden');
+            document.getElementById('view-gameover').classList.remove('hidden');
+        }
+
+        // RESET GAME
+        function resetGame() {
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            gameState = {
+                score: 0,
+                timeLeft: 900,
+                timerInterval: null,
+                hintsLeft: 3,
+                currentStage: 1,
+                currentQuestionIdx: 0,
+                unlockedStages: [1],
+                inventory: [],
+                stageCompleted: [false, false, false, false, false]
+            };
+
+            document.getElementById('score-display').textContent = '0';
+            document.getElementById('hints-left').textContent = '3';
+            document.getElementById('inventory-items').textContent = 'Empty';
+
+            document.getElementById('view-victory').classList.add('hidden');
+            document.getElementById('view-gameover').classList.add('hidden');
+            document.getElementById('view-welcome').classList.remove('hidden');
+        }
+    </script>
+
+</body>
+</html>
